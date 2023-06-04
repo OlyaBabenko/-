@@ -58,7 +58,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://192.168.1.2:3000',
-    'https://yum-yum-delivery.herokuapp.com',
+    'https://yum-yum-delivery.netlify.app',
 ]
 
 ROOT_URLCONF = 'yyd_back.urls'
