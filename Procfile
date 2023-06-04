@@ -1,1 +1,1 @@
-web: gunicorn yyd_back.yyd_back.wsgi
+web: gunicorn yyd_back.wsgi --log-file -
