@@ -9,7 +9,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
 
 
 class ProductsSerializer(serializers.ModelSerializer):
-    restaurant = RestaurantSerializer()
+    # restaurant = RestaurantSerializer()
 
     class Meta:
         model = Product
@@ -27,16 +27,20 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'address', 'email', 'phone', 'name', 'items']
+        fields = ['id', 'recipient', 'items']
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
 
-        for item_data in items_data:
-            product_id = item_data.get('product')
-
-            quantity = item_data.get('quantity')
-
-            OrderItem.objects.create(order=order, product=product_id, quantity=quantity)
+        order.items.set([OrderItem.objects.create(product=item_data.get('product'), quantity=item_data.get('quantity'))
+                         for item_data in items_data])
+        order.save()
         return order
+
+
+class RecipientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipient
+        fields = "__all__"
+

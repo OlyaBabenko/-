@@ -1,4 +1,9 @@
+import csv
+from decimal import Decimal
 from django.db import models
+from django.contrib.auth import get_user_model
+
+USER_MODEL = get_user_model()
 
 
 class Restaurant(models.Model):
@@ -7,6 +12,37 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductManager(models.Manager):
+    def in_db_from_csv(self):
+        with open('products_restaurant.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                restaurant = Restaurant(
+                    id=int(row["id"]),
+                    name=row["name"]
+                )
+                restaurant.save()
+        with open('products_product.csv', 'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                instance = Restaurant.objects.get(id=int(row['restaurant_id']))
+                if row["oldPrice"] == '':
+                    row["oldPrice"] = None
+                else:
+                    row["oldPrice"] = Decimal(row["oldPrice"])
+                product = Product(
+                    id=int(row['id']),
+                    name=row['name'],
+                    imgUrl=row["imgUrl"],
+                    weight=row["weight"],
+                    description=row["description"],
+                    oldPrice=row["oldPrice"],
+                    actualPrice=Decimal(row["actualPrice"]),
+                    restaurant=instance
+                )
+                product.save()
 
 
 class Product(models.Model):
@@ -18,7 +54,7 @@ class Product(models.Model):
     description = models.CharField(max_length=255)
     oldPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     actualPrice = models.DecimalField(max_digits=10, decimal_places=2)
-    objects = models.Manager()
+    objects = ProductManager()
 
 
 class OrderItem(models.Model):
@@ -29,9 +65,19 @@ class OrderItem(models.Model):
         return f'{self.product.name}, {self.quantity}'
 
 
-class Order(models.Model):
+class Recipient(models.Model):
+    user = models.OneToOneField(USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    first_name = models.CharField(max_length=36)
+    last_name = models.CharField(max_length=36)
     address = models.CharField(max_length=100)
-    email = models.EmailField()
     phone = models.CharField(max_length=20)
-    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        if self.user.username:
+            return self.user.username
+        return "Anonymous"
+
+
+class Order(models.Model):
+    recipient = models.ForeignKey(Recipient, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)

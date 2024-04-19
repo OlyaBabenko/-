@@ -14,9 +14,14 @@ class RestaurantAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'address', 'email', 'phone', 'name')
+    list_display = ('id', 'recipient')
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ('product', 'quantity')
+
+
+@admin.register(Recipient)
+class RecipientAdmin(admin.ModelAdmin):
+    list_display = ("user", "first_name", "last_name", "address", "phone")

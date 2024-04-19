@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-g^2w-z(u#ofd)(14oe%)14h0(a$dq3w4+4lw*mu$%&73eua0p=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['yyd-back.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -37,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'products',
+    'drf_yasg',
     'rest_framework',
+    'rest_framework.authtoken',
+    'products',
+    'accounts',
+    'users',
     'corsheaders',
 ]
 
@@ -57,8 +61,6 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://192.168.1.2:3000',
-    'http://192.168.1.3:3000',
-    'https://yum-yum-delivery.netlify.app',
 ]
 
 ROOT_URLCONF = 'yyd_back.urls'
@@ -128,9 +130,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("users.auth.BearerTokenAuthentication",),
+}
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'root': {
+#         'handlers': ['console'],
+#         'level': 'DEBUG',  # Или выберите уровень логирования, который подходит для вас
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',  # Или выберите уровень логирования, который подходит для вас
+#             'propagate': False,
+#         },
+#     },
+# }
