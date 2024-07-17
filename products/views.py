@@ -60,10 +60,10 @@ class RecipientViewSet(viewsets.ModelViewSet):
             except Recipient.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "Object not found"})
 
-    def create(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            request.data.update({'user': request.user.id})
-        return super().create(request, *args, **kwargs)
+    # def create(self, request, *args, **kwargs):
+    #     if request.user.is_authenticated:
+    #         request.data.update({'user': request.user.id})
+    #     return super().create(request, *args, **kwargs)
 
 
 @api_view(['GET'])
