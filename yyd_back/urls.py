@@ -15,7 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path, include
+from .settings import MEDIA_URL, MEDIA_ROOT
 from .swagger import SchemaView
 
 urlpatterns = [
@@ -24,3 +26,5 @@ urlpatterns = [
     path("swagger<str:format>/", SchemaView.without_ui(cache_timeout=0), name="schema-json"),
     path("swagger/", SchemaView.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
 ]
+
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
