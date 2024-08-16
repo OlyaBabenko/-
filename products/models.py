@@ -50,7 +50,6 @@ class Product(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     imgUrl = models.ImageField(upload_to="product_pictures/", blank=True, null=True)
-    # imgUrl = models.CharField(max_length=255)
     weight = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     oldPrice = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

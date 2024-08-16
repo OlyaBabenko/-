@@ -26,7 +26,11 @@ class ProductFilterRestaurantView(viewsets.ModelViewSet):
     lookup_field = "restaurant__name"
 
     def list(self, request, **kwargs):
-        serializer = ProductsSerializer(Product.objects.filter(restaurant__name=kwargs.get('name')), many=True)
+        serializer = ProductsSerializer(
+            Product.objects.filter(restaurant__name=kwargs.get('name')),
+            many=True,
+            context={'request': request}
+        )
         return Response({'data': serializer.data}, status=status.HTTP_200_OK)
 
     @staticmethod
